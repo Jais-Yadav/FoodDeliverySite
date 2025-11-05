@@ -1,0 +1,59 @@
+﻿@model IEnumerable<FoodDeliveryApp.Models.CartItem>
+@{
+    ViewData["Title"] = "My Cart";
+}
+<h2 class="fw-bold mb-4">🛒 My Cart</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info text-center">Your cart is empty!</div>
+}
+else
+{
+    <table class="table align-middle shadow-sm bg-white rounded">
+        <thead class="table-light">
+            <tr>
+                <th>Item</th>
+                <th class="text-center">Quantity</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Subtotal</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MenuItem.Name</td>
+                    <td class="text-center">
+                        <form asp-action="UpdateQuantity" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control form-control-sm w-50 d-inline" />
+                            <button class="btn btn-outline-secondary btn-sm">↻</button>
+                        </form>
+                    </td>
+                    <td class="text-end">₹@item.MenuItem.Price.ToString("F2")</td>
+                    <td class="text-end">₹@((item.MenuItem.Price * item.Quantity).ToString("F2"))</td>
+                    <td class="text-end">
+                        <form asp-action="RemoveItem" method="post">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <form asp-action="Clear" method="post">
+            <button type="submit" class="btn btn-outline-danger"><i class="fa-solid fa-xmark"></i> Clear Cart</button>
+        </form>
+        <div>
+            <h5>Total: <span class="text-success fw-bold">₹@ViewBag.Total.ToString("F2")</span></h5>
+            <a asp-controller="Orders" asp-action="Checkout" class="btn btn-warning btn-lg rounded-pill mt-2">
+                <i class="fa-solid fa-credit-card"></i> Checkout
+            </a>
+        </div>
+    </div>
+}

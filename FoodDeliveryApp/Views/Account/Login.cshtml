@@ -1,0 +1,76 @@
+﻿@model FoodDeliveryApp.Models.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="auth-container d-flex align-items-center justify-content-center">
+    <div class="card auth-card shadow-lg p-4">
+        <h2 class="text-center text-primary mb-4 fw-bold">Welcome Back!</h2>
+        <form asp-action="Login" method="post">
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label fw-semibold"></label>
+                <input asp-for="Email" class="form-control form-control-lg" placeholder="Enter your email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label fw-semibold"></label>
+                <input asp-for="Password" type="password" class="form-control form-control-lg" placeholder="Enter your password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            @* <div class="form-check mb-3">
+                <input asp-for="RememberMe" class="form-check-input" />
+                <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
+            </div> *@
+
+            <button type="submit" class="btn btn-primary w-100 btn-lg rounded-pill shadow-sm mt-3">Login</button>
+        </form>
+
+
+        <p class="text-center text-muted mt-3">
+            Don’t have an account? <a href="/Account/Register" class="text-decoration-none fw-semibold text-primary">Register</a>
+        </p>
+    </div>
+</div>
+
+<style>
+    .auth-container {
+        min-height: 100vh;
+        width: 100%;
+        background-image: url('/images/food-bg.jpg');
+        background-size: cover; /* Ensures image covers whole screen */
+        background-position: center; /* Centers the image */
+        background-repeat: no-repeat; /* Prevents tiling */
+        background-attachment: fixed; /* Makes the background stable when scrolling (optional) */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+       
+        .auth-container::before{
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.4); /* Transparent layer */
+        backdrop-filter: blur(3px);
+    }
+
+    .auth-container {
+        position: relative;
+    }
+
+    }
+
+    .auth-card {
+        max-width: 400px;
+        width: 100%;
+        border-radius: 20px;
+        backdrop-filter: blur(8px);
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+</style>

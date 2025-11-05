@@ -1,0 +1,38 @@
+﻿@model FoodDeliveryApp.Models.Restaurant
+@{
+    ViewData["Title"] = @Model.Name;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold">@Model.Name</h2>
+        <p class="text-muted mb-0">@Model.Description</p>
+        <small class="text-secondary">@Model.Address</small>
+    </div>
+    <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-primary"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var item in Model.MenuItems)
+    {
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm hover-scale">
+                <img src="@(item.ImageUrl ?? "/images/placeholder-food.jpg")" class="card-img-top rounded-top" alt="@item.Name" />
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="fw-semibold">@item.Name</h5>
+                        @* <p class="small text-muted">@item.Description</p> *@
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <span class="fw-bold text-success">₹@item.Price</span>
+                        <form asp-controller="Cart" asp-action="AddToCart" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button class="btn btn-primary btn-sm rounded-pill"><i class="fa-solid fa-plus"></i> Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
