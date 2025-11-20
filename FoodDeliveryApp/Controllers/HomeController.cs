@@ -14,10 +14,31 @@ namespace FoodDeliveryApp.Controllers
             _context = context;
         }
 
-        // Home page - list menu items
-        public IActionResult Index()
+        // Home page - list menu items with optional category filter and search
+        public IActionResult Index(string? category, string? q)
         {
-            var menuItems = _context.MenuItems.Include(m => m.Restaurant).ToList();
+            var query = _context.MenuItems.Include(m => m.Restaurant).AsQueryable();
+
+            // Expose category list and current selections to the view
+            ViewData["Categories"] = new List<string> { "All", "Fast Food", "Beverages", "Lunch" };
+            ViewData["SelectedCategory"] = string.IsNullOrEmpty(category) ? "All" : category!;
+            ViewData["SearchQuery"] = q ?? string.Empty;
+
+            if (!string.IsNullOrEmpty(category) && category != "All")
+            {
+                query = query.Where(m => m.Category == category);
+            }
+
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                var search = q.Trim();
+                query = query.Where(m =>
+                    EF.Functions.Like(m.Name, $"%{search}%") ||
+                    (m.Restaurant != null && EF.Functions.Like(m.Restaurant.Name, $"%{search}%"))
+                );
+            }
+
+            var menuItems = query.ToList();
             return View(menuItems);
         }
 

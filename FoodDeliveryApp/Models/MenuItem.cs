@@ -6,6 +6,9 @@
         public required string Name { get; set; }
         public decimal Price { get; set; }
         public string? ImageUrl { get; set; }
+ = string.Empty;
+        // Category e.g. "Fast Food", "Beverages", "Lunch"
+        public string? Category { get; set; }
 
         // Foreign key
         public int RestaurantId { get; set; }
@@ -14,4 +17,3 @@
         public Restaurant? Restaurant { get; set; }
     }
 }
-

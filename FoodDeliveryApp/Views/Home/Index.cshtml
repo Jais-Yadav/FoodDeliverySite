@@ -2,19 +2,43 @@
 
 @{
     ViewData["Title"] = "Home - Food Delivery";
+    var selected = (ViewData["SelectedCategory"] as string) ?? "All";
+    var categories = (ViewData["Categories"] as List<string>) ?? new List<string> { "All", "Fast Food", "Beverages", "Lunch" };
+    var searchQuery = (ViewData["SearchQuery"] as string) ?? string.Empty;
 }
 
-@* <h1 class="text-center mb-4">🍴 Food Ordering Site</h1> *@
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">🍴 Menu</h2>
+
+    <form asp-action="Index" method="get" class="d-flex" role="search">
+        <input type="hidden" name="category" value="@selected" />
+        <div class="input-group">
+            <input type="search" name="q" class="form-control" placeholder="Search restaurants or dishes..." value="@searchQuery" />
+            <button class="btn btn-outline-secondary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="mb-3">
+    <div class="btn-group" role="group" aria-label="Categories">
+        @foreach (var cat in categories)
+        {
+            var isActive = selected == cat ? "btn-primary" : "btn-outline-primary";
+            <a asp-action="Index" asp-route-category="@cat" asp-route-q="@searchQuery" class="btn @isActive">@cat</a>
+        }
+    </div>
+</div>
 
 <div class="row">
     @foreach (var item in Model)
     {
         <div class="col-md-3 mb-4">
             <div class="card shadow-sm">
-                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height:180px;object-fit:cover;">
+                <img src="@(item.ImageUrl ?? "/images/placeholder-food.jpg")" class="card-img-top" alt="@item.Name" style="height:180px;object-fit:cover;">
                 <div class="card-body">
                     <h5 class="card-title">@item.Name</h5>
                     <p class="card-text">@item.Restaurant?.Name</p>
+                    <p class="small text-muted mb-1">Category: @(item.Category ?? "—")</p>
                     <p class="fw-bold text-success">₹@item.Price.ToString("F2")</p>
                     <form asp-action="AddToCart" method="post">
                         <input type="hidden" name="id" value="@item.Id" />

@@ -1,0 +1,156 @@
+@page
+@model Pages.Orders.CheckoutModel
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <h3 class="mb-3">Delivery & Billing Details</h3>
+
+        <form method="post" class="card p-3" novalidate>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Full name</label>
+                    <input asp-for="FullName" class="form-control" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Phone</label>
+                    <input asp-for="Phone" class="form-control" />
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Address</label>
+                    <input asp-for="Address" class="form-control" />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">City</label>
+                    <input asp-for="City" class="form-control" />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">State</label>
+                    <input asp-for="State" class="form-control" />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">ZIP</label>
+                    <input asp-for="Zip" class="form-control" />
+                </div>
+            </div>
+
+            <hr class="my-4" />
+
+            <h5 class="mb-3">Payment</h5>
+
+            <div class="mb-3">
+                <div class="btn-group" role="group" aria-label="Payment methods">
+                    <input type="radio" class="btn-check" name="PaymentMethod" id="pmCard" value="Card" checked onchange="togglePayment(this.value)" />
+                    <label class="btn btn-outline-primary" for="pmCard">Credit / Debit Card</label>
+
+                    <input type="radio" class="btn-check" name="PaymentMethod" id="pmUPI" value="UPI" onchange="togglePayment(this.value)" />
+                    <label class="btn btn-outline-primary" for="pmUPI">UPI</label>
+
+                    <input type="radio" class="btn-check" name="PaymentMethod" id="pmCOD" value="COD" onchange="togglePayment(this.value)" />
+                    <label class="btn btn-outline-primary" for="pmCOD">Cash on Delivery</label>
+                </div>
+            </div>
+
+            <div id="cardSection">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label">Name on card</label>
+                        <input asp-for="CardName" class="form-control" />
+                    </div>
+
+                    <div class="col-md-8">
+                        <label class="form-label">Card number</label>
+                        <input asp-for="CardNumber" class="form-control" maxlength="19" placeholder="xxxx xxxx xxxx xxxx" oninput="formatCardNumber(this)" />
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Expiry</label>
+                        <input asp-for="Expiry" class="form-control" placeholder="MM/YY" maxlength="5" />
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">CVV</label>
+                        <input asp-for="Cvv" class="form-control" maxlength="4" />
+                    </div>
+                </div>
+            </div>
+
+            <div id="upiSection" class="d-none">
+                <div class="mb-3 mt-3">
+                    <label class="form-label">Enter UPI ID</label>
+                    <input asp-for="UpiId" class="form-control" placeholder="example@upi" />
+                </div>
+                <div class="alert alert-secondary small">
+                    This is a mock UPI flow. No real UPI transaction will occur.
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between align-items-center">
+                <a asp-page="/Index" class="btn btn-outline-secondary">Back to menu</a>
+                <button type="submit" class="btn btn-success" onclick="return confirm('This is a demo checkout — proceed?')">
+                    Pay now
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-4">
+        <h3 class="mb-3">Order Summary</h3>
+
+        <div class="card p-3">
+            <div class="d-flex justify-content-between">
+                <div>Items</div>
+                <div>3</div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-2">
+                <div>Subtotal</div>
+                <div>?700.00</div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-1">
+                <div>Delivery</div>
+                <div>?30.00</div>
+            </div>
+
+            <hr />
+
+            <div class="d-flex justify-content-between fw-bold">
+                <div>Total</div>
+                <div>?730.00</div>
+            </div>
+        </div>
+
+        <small class="text-muted d-block mt-2">This is a demo checkout page. No real payment will be processed.</small>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function togglePayment(method) {
+            document.getElementById('cardSection').classList.toggle('d-none', method !== 'Card');
+            document.getElementById('upiSection').classList.toggle('d-none', method !== 'UPI');
+        }
+
+        function formatCardNumber(input) {
+            var v = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            var parts = [];
+            for (var i = 0; i < v.length; i += 4) {
+                parts.push(v.substring(i, i + 4));
+            }
+            input.value = parts.join(' ').trim().substr(0, 19);
+        }
+    </script>
+}
